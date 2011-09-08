@@ -649,6 +649,7 @@ public class CassandraServer implements Cassandra.Iface
     {
         state().hasKeyspaceSchemaAccess(Permission.READ);
 
+        KSMetaData ksm = Schema.instance.getTableDefinition(table);
         if (ksm == null)
             throw new NotFoundException();
 
