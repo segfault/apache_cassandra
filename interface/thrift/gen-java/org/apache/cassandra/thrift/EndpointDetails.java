@@ -42,19 +42,19 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Authentication requests can contain any data, dependent on the IAuthenticator used
- */
-public class AuthenticationRequest implements org.apache.thrift.TBase<AuthenticationRequest, AuthenticationRequest._Fields>, java.io.Serializable, Cloneable {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("AuthenticationRequest");
+public class EndpointDetails implements org.apache.thrift.TBase<EndpointDetails, EndpointDetails._Fields>, java.io.Serializable, Cloneable {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("EndpointDetails");
 
-  private static final org.apache.thrift.protocol.TField CREDENTIALS_FIELD_DESC = new org.apache.thrift.protocol.TField("credentials", org.apache.thrift.protocol.TType.MAP, (short)1);
+  private static final org.apache.thrift.protocol.TField PORT_FIELD_DESC = new org.apache.thrift.protocol.TField("port", org.apache.thrift.protocol.TType.I32, (short)1);
+  private static final org.apache.thrift.protocol.TField DATACENTER_FIELD_DESC = new org.apache.thrift.protocol.TField("datacenter", org.apache.thrift.protocol.TType.STRING, (short)2);
 
-  public Map<String,String> credentials;
+  public int port;
+  public String datacenter;
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    CREDENTIALS((short)1, "credentials");
+    PORT((short)1, "port"),
+    DATACENTER((short)2, "datacenter");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -69,8 +69,10 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
      */
     public static _Fields findByThriftId(int fieldId) {
       switch(fieldId) {
-        case 1: // CREDENTIALS
-          return CREDENTIALS;
+        case 1: // PORT
+          return PORT;
+        case 2: // DATACENTER
+          return DATACENTER;
         default:
           return null;
       }
@@ -111,100 +113,118 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
   }
 
   // isset id assignments
+  private static final int __PORT_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.CREDENTIALS, new org.apache.thrift.meta_data.FieldMetaData("credentials", org.apache.thrift.TFieldRequirementType.REQUIRED, 
-        new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
-            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
-            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
+    tmpMap.put(_Fields.PORT, new org.apache.thrift.meta_data.FieldMetaData("port", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+    tmpMap.put(_Fields.DATACENTER, new org.apache.thrift.meta_data.FieldMetaData("datacenter", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(AuthenticationRequest.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(EndpointDetails.class, metaDataMap);
   }
 
-  public AuthenticationRequest() {
+  public EndpointDetails() {
   }
 
-  public AuthenticationRequest(
-    Map<String,String> credentials)
+  public EndpointDetails(
+    int port,
+    String datacenter)
   {
     this();
-    this.credentials = credentials;
+    this.port = port;
+    setPortIsSet(true);
+    this.datacenter = datacenter;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public AuthenticationRequest(AuthenticationRequest other) {
-    if (other.isSetCredentials()) {
-      Map<String,String> __this__credentials = new HashMap<String,String>();
-      for (Map.Entry<String, String> other_element : other.credentials.entrySet()) {
-
-        String other_element_key = other_element.getKey();
-        String other_element_value = other_element.getValue();
-
-        String __this__credentials_copy_key = other_element_key;
-
-        String __this__credentials_copy_value = other_element_value;
-
-        __this__credentials.put(__this__credentials_copy_key, __this__credentials_copy_value);
-      }
-      this.credentials = __this__credentials;
+  public EndpointDetails(EndpointDetails other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.port = other.port;
+    if (other.isSetDatacenter()) {
+      this.datacenter = other.datacenter;
     }
   }
 
-  public AuthenticationRequest deepCopy() {
-    return new AuthenticationRequest(this);
+  public EndpointDetails deepCopy() {
+    return new EndpointDetails(this);
   }
 
   @Override
   public void clear() {
-    this.credentials = null;
+    setPortIsSet(false);
+    this.port = 0;
+    this.datacenter = null;
   }
 
-  public int getCredentialsSize() {
-    return (this.credentials == null) ? 0 : this.credentials.size();
+  public int getPort() {
+    return this.port;
   }
 
-  public void putToCredentials(String key, String val) {
-    if (this.credentials == null) {
-      this.credentials = new HashMap<String,String>();
-    }
-    this.credentials.put(key, val);
-  }
-
-  public Map<String,String> getCredentials() {
-    return this.credentials;
-  }
-
-  public AuthenticationRequest setCredentials(Map<String,String> credentials) {
-    this.credentials = credentials;
+  public EndpointDetails setPort(int port) {
+    this.port = port;
+    setPortIsSet(true);
     return this;
   }
 
-  public void unsetCredentials() {
-    this.credentials = null;
+  public void unsetPort() {
+    __isset_bit_vector.clear(__PORT_ISSET_ID);
   }
 
-  /** Returns true if field credentials is set (has been assigned a value) and false otherwise */
-  public boolean isSetCredentials() {
-    return this.credentials != null;
+  /** Returns true if field port is set (has been assigned a value) and false otherwise */
+  public boolean isSetPort() {
+    return __isset_bit_vector.get(__PORT_ISSET_ID);
   }
 
-  public void setCredentialsIsSet(boolean value) {
+  public void setPortIsSet(boolean value) {
+    __isset_bit_vector.set(__PORT_ISSET_ID, value);
+  }
+
+  public String getDatacenter() {
+    return this.datacenter;
+  }
+
+  public EndpointDetails setDatacenter(String datacenter) {
+    this.datacenter = datacenter;
+    return this;
+  }
+
+  public void unsetDatacenter() {
+    this.datacenter = null;
+  }
+
+  /** Returns true if field datacenter is set (has been assigned a value) and false otherwise */
+  public boolean isSetDatacenter() {
+    return this.datacenter != null;
+  }
+
+  public void setDatacenterIsSet(boolean value) {
     if (!value) {
-      this.credentials = null;
+      this.datacenter = null;
     }
   }
 
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
-    case CREDENTIALS:
+    case PORT:
       if (value == null) {
-        unsetCredentials();
+        unsetPort();
       } else {
-        setCredentials((Map<String,String>)value);
+        setPort((Integer)value);
+      }
+      break;
+
+    case DATACENTER:
+      if (value == null) {
+        unsetDatacenter();
+      } else {
+        setDatacenter((String)value);
       }
       break;
 
@@ -213,8 +233,11 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
 
   public Object getFieldValue(_Fields field) {
     switch (field) {
-    case CREDENTIALS:
-      return getCredentials();
+    case PORT:
+      return new Integer(getPort());
+
+    case DATACENTER:
+      return getDatacenter();
 
     }
     throw new IllegalStateException();
@@ -227,8 +250,10 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
     }
 
     switch (field) {
-    case CREDENTIALS:
-      return isSetCredentials();
+    case PORT:
+      return isSetPort();
+    case DATACENTER:
+      return isSetDatacenter();
     }
     throw new IllegalStateException();
   }
@@ -237,21 +262,30 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof AuthenticationRequest)
-      return this.equals((AuthenticationRequest)that);
+    if (that instanceof EndpointDetails)
+      return this.equals((EndpointDetails)that);
     return false;
   }
 
-  public boolean equals(AuthenticationRequest that) {
+  public boolean equals(EndpointDetails that) {
     if (that == null)
       return false;
 
-    boolean this_present_credentials = true && this.isSetCredentials();
-    boolean that_present_credentials = true && that.isSetCredentials();
-    if (this_present_credentials || that_present_credentials) {
-      if (!(this_present_credentials && that_present_credentials))
+    boolean this_present_port = true;
+    boolean that_present_port = true;
+    if (this_present_port || that_present_port) {
+      if (!(this_present_port && that_present_port))
         return false;
-      if (!this.credentials.equals(that.credentials))
+      if (this.port != that.port)
+        return false;
+    }
+
+    boolean this_present_datacenter = true && this.isSetDatacenter();
+    boolean that_present_datacenter = true && that.isSetDatacenter();
+    if (this_present_datacenter || that_present_datacenter) {
+      if (!(this_present_datacenter && that_present_datacenter))
+        return false;
+      if (!this.datacenter.equals(that.datacenter))
         return false;
     }
 
@@ -262,28 +296,43 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_credentials = true && (isSetCredentials());
-    builder.append(present_credentials);
-    if (present_credentials)
-      builder.append(credentials);
+    boolean present_port = true;
+    builder.append(present_port);
+    if (present_port)
+      builder.append(port);
+
+    boolean present_datacenter = true && (isSetDatacenter());
+    builder.append(present_datacenter);
+    if (present_datacenter)
+      builder.append(datacenter);
 
     return builder.toHashCode();
   }
 
-  public int compareTo(AuthenticationRequest other) {
+  public int compareTo(EndpointDetails other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
-    AuthenticationRequest typedOther = (AuthenticationRequest)other;
+    EndpointDetails typedOther = (EndpointDetails)other;
 
-    lastComparison = Boolean.valueOf(isSetCredentials()).compareTo(typedOther.isSetCredentials());
+    lastComparison = Boolean.valueOf(isSetPort()).compareTo(typedOther.isSetPort());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetCredentials()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.credentials, typedOther.credentials);
+    if (isSetPort()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.port, typedOther.port);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetDatacenter()).compareTo(typedOther.isSetDatacenter());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetDatacenter()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.datacenter, typedOther.datacenter);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -305,21 +354,17 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
         break;
       }
       switch (field.id) {
-        case 1: // CREDENTIALS
-          if (field.type == org.apache.thrift.protocol.TType.MAP) {
-            {
-              org.apache.thrift.protocol.TMap _map28 = iprot.readMapBegin();
-              this.credentials = new HashMap<String,String>(2*_map28.size);
-              for (int _i29 = 0; _i29 < _map28.size; ++_i29)
-              {
-                String _key30;
-                String _val31;
-                _key30 = iprot.readString();
-                _val31 = iprot.readString();
-                this.credentials.put(_key30, _val31);
-              }
-              iprot.readMapEnd();
-            }
+        case 1: // PORT
+          if (field.type == org.apache.thrift.protocol.TType.I32) {
+            this.port = iprot.readI32();
+            setPortIsSet(true);
+          } else { 
+            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case 2: // DATACENTER
+          if (field.type == org.apache.thrift.protocol.TType.STRING) {
+            this.datacenter = iprot.readString();
           } else { 
             org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
           }
@@ -339,17 +384,12 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.credentials != null) {
-      oprot.writeFieldBegin(CREDENTIALS_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, this.credentials.size()));
-        for (Map.Entry<String, String> _iter32 : this.credentials.entrySet())
-        {
-          oprot.writeString(_iter32.getKey());
-          oprot.writeString(_iter32.getValue());
-        }
-        oprot.writeMapEnd();
-      }
+    oprot.writeFieldBegin(PORT_FIELD_DESC);
+    oprot.writeI32(this.port);
+    oprot.writeFieldEnd();
+    if (this.datacenter != null) {
+      oprot.writeFieldBegin(DATACENTER_FIELD_DESC);
+      oprot.writeString(this.datacenter);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -358,14 +398,18 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("AuthenticationRequest(");
+    StringBuilder sb = new StringBuilder("EndpointDetails(");
     boolean first = true;
 
-    sb.append("credentials:");
-    if (this.credentials == null) {
+    sb.append("port:");
+    sb.append(this.port);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("datacenter:");
+    if (this.datacenter == null) {
       sb.append("null");
     } else {
-      sb.append(this.credentials);
+      sb.append(this.datacenter);
     }
     first = false;
     sb.append(")");
@@ -374,9 +418,6 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
 
   public void validate() throws org.apache.thrift.TException {
     // check for required fields
-    if (credentials == null) {
-      throw new org.apache.thrift.protocol.TProtocolException("Required field 'credentials' was not present! Struct: " + toString());
-    }
   }
 
   private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -389,6 +430,8 @@ public class AuthenticationRequest implements org.apache.thrift.TBase<Authentica
 
   private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
     try {
+      // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+      __isset_bit_vector = new BitSet(1);
       read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
     } catch (org.apache.thrift.TException te) {
       throw new java.io.IOException(te);
