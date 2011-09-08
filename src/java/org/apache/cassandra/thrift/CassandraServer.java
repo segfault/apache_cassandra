@@ -20,6 +20,7 @@ package org.apache.cassandra.thrift;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -48,6 +49,10 @@ import org.apache.cassandra.db.marshal.MarshalException;
 import org.apache.cassandra.db.migration.*;
 import org.apache.cassandra.db.context.CounterContext;
 import org.apache.cassandra.dht.*;
+import org.apache.cassandra.gms.ApplicationState;
+import org.apache.cassandra.gms.EndpointState;
+import org.apache.cassandra.gms.Gossiper;
+import org.apache.cassandra.gms.VersionedValue;
 import org.apache.cassandra.io.util.FastByteArrayOutputStream;
 import org.apache.cassandra.locator.*;
 import org.apache.cassandra.scheduler.IRequestScheduler;
@@ -56,6 +61,7 @@ import org.apache.cassandra.service.SocketSessionManagementService;
 import org.apache.cassandra.service.StorageProxy;
 import org.apache.cassandra.service.StorageService;
 import org.apache.cassandra.utils.ByteBufferUtil;
+import org.apache.cassandra.utils.FBUtilities;
 import org.apache.thrift.TException;
 
 public class CassandraServer implements Cassandra.Iface
@@ -787,30 +793,41 @@ public class CassandraServer implements Cassandra.Iface
 
         List<TokenRange> ranges = new ArrayList<TokenRange>();
         Token.TokenFactory tf = StorageService.getPartitioner().getTokenFactory();
-        for (Map.Entry<Range, List<String>> entry : StorageService.instance.getRangeToRpcaddressMap(keyspace).entrySet())
+
+        for (Map.Entry<Range,List<InetAddress>> entry : StorageService.instance.getRangeToAddressMap(keyspace).entrySet())
         {
             Range range = entry.getKey();
-            List<String> endpoints = entry.getValue();
-            List<String> dataCenters = new Vector<String>();
-            List<Integer> ports = new Vector<Integer>();
-            for (String host : endpoints)
-            {
-                if (!dataCenterMap.containsKey(host))
+            List<String> endpoints = new Vector<String>();
+            List<EndpointDetails> epDetails = new Vector<EndpointDetails>();
+
+            for (InetAddress endpoint: entry.getValue())
+            {            
+                EndpointState eps = Gossiper.instance.getEndpointStateForEndpoint(endpoint);
+                EndpointDetails dtls = new EndpointDetails();
+                dtls.port = -1; // default to an unknown port since we don't seem to maintain that knowledge about remote endpoints.
+
+                if (endpoint.equals(FBUtilities.getBroadcastAddress()))
                 {
-                    String dc = DatabaseDescriptor.getEndpointSnitch().getDatacenter(InetAddress.getByName(host));
-                    dataCenterMap.set(host, dc);
+                    endpoints.add(DatabaseDescriptor.getRpcAddress().getHostAddress());
+                    dtls.port = DatabaseDescriptor.getRpcPort();
                 }
+                else if (eps.getApplicationState(ApplicationState.RPC_ADDRESS) == null)
+                    endpoints.add(endpoint.getHostAddress());
+                else
+                    endpoints.add(eps.getApplicationState(ApplicationState.RPC_ADDRESS).value);
 
-                if (!thriftPortMap.containsKey(host))
-                {
+                VersionedValue appStateDc = eps.getApplicationState(ApplicationState.DC);
+                if (appStateDc != null)
+                    dtls.datacenter = appStateDc.value;
 
-                }
-
-                dataCenters.add(dataCenterMap.get(host));
-                ports.add(thriftPortMap.get(host));
+                epDetails.add(dtls);
             }
-            ranges.add(new TokenRange(tf.toString(range.left), tf.toString(range.right), endpoints, dataCenters, ports));
+
+            TokenRange tr = new TokenRange(tf.toString(range.left), tf.toString(range.right), endpoints);
+            tr.endpoint_details = epDetails;
+            ranges.add(tr);
         }
+
         return ranges;
     }
 
