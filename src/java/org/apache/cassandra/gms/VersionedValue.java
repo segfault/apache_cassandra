@@ -170,6 +170,11 @@ public class VersionedValue implements Comparable<VersionedValue>
             return new VersionedValue(endpoint.getHostAddress());
         }
 
+        public VersionedValue rpcport(int port)
+        {
+            return new VersionedValue(Integer.toString(port));
+        }
+
         public VersionedValue releaseVersion()
         {
             return new VersionedValue(FBUtilities.getReleaseVersionString());

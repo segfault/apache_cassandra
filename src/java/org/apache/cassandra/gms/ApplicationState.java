@@ -32,6 +32,7 @@ public enum ApplicationState
     REMOVAL_COORDINATOR,
     INTERNAL_IP,
     RPC_ADDRESS,
+    RPC_PORT,
     // pad to allow adding new states to existing cluster
     X1,
     X2,

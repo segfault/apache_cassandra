@@ -468,6 +468,7 @@ public class StorageService implements IEndpointStateChangeSubscriber, StorageSe
         Gossiper.instance.start(SystemTable.incrementAndGetGeneration()); // needed for node-ring gathering.
         // add rpc listening info
         Gossiper.instance.addLocalApplicationState(ApplicationState.RPC_ADDRESS, valueFactory.rpcaddress(DatabaseDescriptor.getRpcAddress()));
+        Gossiper.instance.addLocalApplicationState(ApplicationState.RPC_PORT, valueFactory.rpcport(DatabaseDescriptor.getRpcPort()));
         Gossiper.instance.addLocalApplicationState(ApplicationState.STATUS, valueFactory.hibernate(null != DatabaseDescriptor.getReplaceToken()));
 
         MessagingService.instance().listen(FBUtilities.getLocalAddress());
